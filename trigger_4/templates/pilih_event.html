@@ -49,35 +49,19 @@
                         <th scope="col">Total Hadiah</th>
                         <th scope="col">Tanggal Mulai</th>
                         <th scope="col">Kategori</th>
-                        <th scope="col">Kapasitas</th>
-                        <th scope="col"></th>
+                        <th scope="col">Action</th>
                     </tr>
                     </thead>
                     <tbody>
+                        {% for q in query%}
                     <tr>
-                        <td>Denmark Open</td>
-                        <td>Rp1.1370.000.000</td>
-                        <td>17/10/2023</td>
-                        <td>S750</td>
-                        <td>3/8</td>
-                        <td><a href="#">Pilih</a></td>
+                        <td>{{q.nama_event}}</td>
+                        <td>{{q.total_hadiah}}</td>
+                        <td>{{q.tgl_mulai}}</td>
+                        <td>{{q.kategori_superseries}}</td>
+                        <td><a href="../../{{q.nama_event}}/{{q.tgl_mulai.year}}/">Pilih</a></td>
                     </tr>
-                    <tr>
-                        <td>Japan Open</td>
-                        <td>Rp10.272.000.000</td>
-                        <td>12/09/2023</td>
-                        <td>S750</td>
-                        <td>5/8</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
-                    <tr>
-                        <td>Indonesia Masters</td>
-                        <td>Rp1.760.000.000</td>
-                        <td>10/09/2024</td>
-                        <td>S500</td>
-                        <td>1/8</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>

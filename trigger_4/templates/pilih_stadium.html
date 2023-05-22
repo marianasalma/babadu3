@@ -48,40 +48,18 @@
                     <th scope="col">Nama Stadium</th>
                     <th scope="col">Negara</th>
                     <th scope="col">Kapasitas</th>
-                    <th scope="col"></th>
+                    <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for q in query%}
                     <tr>
-                        <td>Tokyo Metropolitan Gymnasium</td>
-                        <td>Jepang</td>
-                        <td>10000</td>
-                        <td><a href="#">Pilih</a></td>
+                        <td>{{q.nama_stadium}}</td>
+                        <td>{{q.negara}}</td>
+                        <td>{{q.kapasitas}}</td>
+                        <td><a href="../daftar-event/stadium/{{q.nama_stadium}}/">Pilih</a></td>
                     </tr>
-                    <tr>
-                        <td>Gachibowli Indoor Stadium</td>
-                        <td>India</td>
-                        <td>5000</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
-                    <tr>
-                        <td>Eventfinda Stadium</td>
-                        <td>Selandia Baru</td>
-                        <td>4180</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
-                    <tr>
-                        <td>Royal Arena</td>
-                        <td>Denmark</td>
-                        <td>13000</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
-                    <tr>
-                        <td>Gelora Bung Karno Sports Palace</td>
-                        <td>Indonesia</td>
-                        <td>7166</td>
-                        <td><a href="#">Pilih</a></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
                 </table>
             </div>
