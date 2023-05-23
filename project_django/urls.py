@@ -19,10 +19,9 @@ from trigger_1.views import logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('kira.urls')),
+    path('', include('landing_page.urls')),
     path('atlet/', include('atlet.urls')),
     path('umpire/', include('umpire.urls')),
-    path('', include('example_app.urls')),
     path('dash/', include('dashboard.urls')),
     path('registration/', include('registration.urls')),
     path('trigger_1/', include('trigger_1.urls')),
