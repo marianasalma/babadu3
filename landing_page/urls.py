@@ -1,5 +1,5 @@
 from django.urls import path
-from kira.views import *
+from landing_page.views import *
 
 app_name = 'kira'
 
