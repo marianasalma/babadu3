@@ -14,11 +14,17 @@
     <!-- Password input -->
     <div class="form-outline mb-4">
         <label class="form-label" for="email">Email</label>
-        <input type="password" id="email" name="email" class="form-control"/>
+        <input type="email" id="email" name="email" class="form-control"/>
     </div>
     
     <!-- Submit button -->
     <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+
+    {% for m in messages %}
+    <div class="d-flex flex-column justify-content-between pb-0 mt-0 mb-2" style="width: 100%;">
+        <p class="text-danger">{{ m }}</p>
+    </div>
+    {% endfor %} 
     
     <!-- Register buttons -->
     <!-- <div class="text-center">
