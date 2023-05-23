@@ -42,58 +42,68 @@
                     <p class="h2">PILIH KATEGORI</p>
                 </div>
 
-                <p class="event-desc"><b>Event:</b> Indonesia Masters</p>
-                <p class="event-desc"><b>Hadiah:</b> Rp1.760.000.000</p>
-                <p class="event-desc"><b>Tanggal Mulai:</b> 10/09/2024</p>
-                <p class="event-desc"><b>Tanggal Selesai:</b> 15/09/2024</p>
-                <p class="event-desc"><b>Kategori:</b> S500</p>
-                <p class="event-desc"><b>Stadium:</b> Gelora Bung Karno Sports Palace</p>
-                <p class="event-desc"><b>Negara:</b> Indonesia</p>
+                <p class="event-desc"><b>Event:</b> {{query.nama_event}}</p>
+                <p class="event-desc"><b>Hadiah:</b> {{query.total_hadiah}}</p>
+                <p class="event-desc"><b>Tanggal Mulai:</b> {{query.tgl_mulai}}</p>
+                <p class="event-desc"><b>Tanggal Selesai:</b> {{query.tgl_selesai}}</p>
+                <p class="event-desc"><b>Kategori:</b> {{query.kategori_superseries}}</p>
+                <p class="event-desc"><b>Kapasitas:</b> {{query.kapasitas}} orang atau pasangan / partai </p>
+                <p class="event-desc"><b>Stadium:</b> {{query.nama}}</p>
+                <p class="event-desc"><b>Negara:</b> {{query.negara}}</p>
 
                 <table class="table table-kategori">
                     <thead>
                     <tr>
                         <th scope="col">Kategori</th>
                         <th scope="col">Partner</th>
-                        <th scope="col"></th>
+                        <th scope="col">Kapasitas</th>
+                        <th scope="col">Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Tunggal Putra</td>
+                    <tr>{% if jenis_kelamin.jenis_kelamin == True %}
+                            <td>Tunggal Putra</td>
+                        {% elif jenis_kelamin.jenis_kelamin == False %}
+                            <td>Tunggal Putri</td>
+                        {% endif %}
+                        
                         <td>-</td>
-                        <td><a href="#">Join</a></td>
+                        <td><p>{{kapasitas_tunggal.count}}/{{query.kapasitas}}</p></td>
+                        {% if query.kapasitas > kapasitas_tunggal.count %}
+                            <td><a href="#">Join</a></td>
+                        {% endif %}
                     </tr>
                     <tr>
-                        <td>Ganda Putra</td>
+                        {% if jenis_kelamin.jenis_kelamin == True %}
+                            <td>Ganda Putra</td>
+                        {% elif jenis_kelamin.jenis_kelamin == False %}
+                            <td>Ganda Putri</td>
+                        {% endif %}
                         <td>
                             <select class="form-select" id="dropdownGandaPutra">
-                                <option value="Mathew Berge">Mathew Berge</option>
-                                <option value="Kaleb Jacobi">Kaleb Jacobi</option>
-                                <option value="Amaya Block">Amaya Block</option>
-                                <option value="Weldon Daniel">Weldon Daniel</option>
-                                <option value="Baby Romaguera">Baby Romaguera</option>
-                                <option value="Ilene Bailey">Ilene Bailey</option>
-                                <option value="Gilberto Wolff">Gilberto Wolff</option>
+                                {% for gq in ganda_query%}
+                                    <option value="{{gq.nama}}">{{gq.nama}}</option>
+                                {% endfor %}
                             </select>
                         </td>
-                        <td><a href="#">Join</a></td>
+                        <td><p>{{kapasitas_ganda.count}}/{{query.kapasitas}}</p></td>
+                        {% if query.kapasitas > kapasitas_ganda.count %}
+                            <td><a href="#">Join</a></td>
+                        {% endif %}
                     </tr>
                     <tr>
                         <td>Ganda Campuran</td>
                         <td>
                             <select class="form-select" id="dropdownGandaCampuran">
-                                <option value="Kira Schinner">Kira Schinner</option>
-                                <option value="Matt Haag">Matt Haag</option>
-                                <option value="Durward Reilly">Durward Reilly</option>
-                                <option value="Frank Ryan">Frank Ryan</option>
-                                <option value="Odell Crona">Odell Crona</option>
-                                <option value="Erick Carter">Erick Carter</option>
-                                <option value="Carlotta Senger">Carlotta Senger</option>
-                                <option value="Pansy Yost">Pansy Yost</option>
+                                {% for cq in campuran_query%}
+                                    <option value="{{cq.nama}}">{{cq.nama}}</option>
+                                {% endfor %}
                             </select>
                         </td>
-                        <td><a href="#">Join</a></td>
+                        <td><p>{{kapasitas_campuran.count}}/{{query.kapasitas}}</p></td>
+                        {% if query.kapasitas > kapasitas_campuran.count %}
+                            <td><a href="#">Join</a></td>
+                        {% endif %}
                     </tr>
                     </tbody>
                 </table>
