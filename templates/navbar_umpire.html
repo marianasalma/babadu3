@@ -7,15 +7,37 @@
         <li class="nav-item active">
           <a class="nav-link" href="#">Dashboard</span></a>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Daftar Atlet</a>
+
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Atlet
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Daftar Atlet</a></li>
+            </ul>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">List Event</a>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Ujian Kualifikasi
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Buat Ujian Kualifikasi</a></li>
+                <li><a class="dropdown-item" href="#">List Ujian Kualifikasi</a></li>
+                <li><a class="dropdown-item" href="#">Riwayat Ujian Kualifikasi</a></li>
+            </ul>
         </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Hasil Pertandingan</a>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Event
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">List Partai Kompetisi</a></li>
+            </ul>
         </li>
+
         <li class="nav-item">
           <a class="nav-link" href="{% url 'logout' %}">Logout</a>
         </li>
