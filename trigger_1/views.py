@@ -2,6 +2,7 @@ from django.shortcuts import redirect, render
 from collections import namedtuple
 from django.db import connection
 
+
 def namedtuplefetchall(cursor):
     "Return all rows from a cursor as a namedtuple"
     desc = cursor.description
@@ -22,6 +23,7 @@ def get_query(str):
         cursor.close()
         return result
 
+
 def is_authenticated(request):
     '''Check if user in a session'''
     try:
@@ -29,6 +31,7 @@ def is_authenticated(request):
         return True
     except KeyError:
         return False
+
 
 def get_role(nama, email):
     # railway
@@ -44,7 +47,7 @@ def get_role(nama, email):
     atlet_query = get_query(
         f'''
         SELECT nama, email
-        FROM babadu2.member as m INNER JOIN babadu2.atlet as a ON m.id=a.id
+        FROM member as m INNER JOIN atlet as a ON m.id=a.id
         WHERE nama='{nama}' AND email='{email}';
         '''
     )
@@ -52,7 +55,7 @@ def get_role(nama, email):
         print("atlet")
         return "atlet"
 
-    
+
 # Create your views here.
 def login(request):
     request.session.flush()
@@ -62,7 +65,7 @@ def login(request):
         print("if1")
         print(request.method)
         return render(request, 'login.html')
-    
+
     if is_authenticated(request):
         print("if 2")
         nama = str(request.session["nama"])
@@ -85,9 +88,15 @@ def login(request):
     print(email)
     print(role)
 
-
     if role == "atlet":
         print("there")
-        return redirect("../../trigger_4/daftar-event/")
-    
+        return redirect("../../dash/atlet")
+
     return render(request, "login.html")
+
+
+def logout(request):
+    request.session.flush()
+    request.session.clear_expired()
+
+    return redirect("../../trigger_1/login")

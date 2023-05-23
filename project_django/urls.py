@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from trigger_1.views import logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('registration/', include('registration.urls')),
     path('trigger_1/', include('trigger_1.urls')),
     path('trigger_4/', include('trigger_4.urls')),
+    path('logout/', logout, name="logout")
 ]
