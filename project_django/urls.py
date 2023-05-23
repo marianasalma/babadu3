@@ -19,12 +19,12 @@ from trigger_1.views import logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('landing_page.urls')),
+    path('', include('trigger_1.urls')),
+    # path('', include('landing_page.urls')),
     path('atlet/', include('atlet.urls')),
     path('umpire/', include('umpire.urls')),
     path('dash/', include('dashboard.urls')),
     path('registration/', include('registration.urls')),
-    path('trigger_1/', include('trigger_1.urls')),
     path('trigger_4/', include('trigger_4.urls')),
     path('logout/', logout, name="logout")
 ]

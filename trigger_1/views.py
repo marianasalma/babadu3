@@ -1,7 +1,9 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from collections import namedtuple
 from django.db import connection
 from django.contrib import messages
+from django.urls import reverse
 
 
 def namedtuplefetchall(cursor):
@@ -147,4 +149,7 @@ def logout(request):
     request.session.flush()
     request.session.clear_expired()
 
-    return redirect("../../trigger_1/login")
+    return HttpResponseRedirect(reverse('trigger_1:landing_page'))
+
+def landing_page(request):
+    return render(request, "landing_page.html")
