@@ -58,14 +58,23 @@
 {% endblock meta %}
 {% block content %}
 {% include 'navbar_umpire.html' %}
-    <h2>HASIL PERTANDINGAN Denmark Open</h2>
-    <p>Nama Event : Denmark Open</p>
-    <p>Stadium : Royal</p>
-    <p>Hadiah : 2000000</p>
-    <p>Kategori Superseries : S750</p>
-    <p>Tanggal Mulai : 17/10/2023</p>
-    <p>Tanggal Selesai : 22/10/2023</p>
-    <p>Kapasitas : 3000</p>
+
+    <div class="pb-3 pt-2 d-flex justify-content-center" style="display: flex; flex-direction: column; align-items: center;">
+        {% for a in list_hasil_pertandingan %}
+        <p class="h2" style="margin-top: 25px;">HASIL PERTANDINGAN {{ a.2 }} - {{ a.0 }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- <h2>HASIL PERTANDINGAN Denmark Open</h2> -->
+    {% for a in list_hasil_pertandingan %}
+        <p>Nama Event : {{ a.0 }}</p>
+        <p>Stadium : {{ a.1 }} </p>
+        <p>Hadiah : {{ a.3 }} </p>
+        <p>Kategori Superseries : {{ a.4 }} </p>
+        <p>Tanggal Mulai : {{ a.5 }} </p>
+        <p>Tanggal Selesai : {{ a.6 }}</p>
+        <p>Kapasitas : {{ a.7 }} </p>
+    {% endfor %}
 
 <table>
     <thead>
