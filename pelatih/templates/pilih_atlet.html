@@ -34,24 +34,6 @@
                     </div>
                 </form>
 
-
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="form-group row">
-                      <div class="pb-3 pt-3 d-flex justify-content-md-start">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">Nama Sponsor</label>
-                        <div class="col-sm-9">
-                              <select class="form-select" id="dropdownSponsor" name="dropdown">
-                              <option value="--Select Option--">--Select Option--</option>
-                              {% for item in list_sponsors %}
-                              <option value="{{item.id}}">{{item.brand}}</option>
-                              {% endfor %}
-                              </select>
-                        </div>
-                      </div>
-                    </div>
-                </form>
-
             </div>
         </div>
     </div>

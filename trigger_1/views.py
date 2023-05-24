@@ -111,6 +111,7 @@ def login(request):
         id = get_id(nama, email)
         request.session["id"] = id
         request.session["email"] = email
+        request.session["nama"] = nama
         request.session["role"] = role
         request.session.set_expiry(0)
         request.session.modified = True
