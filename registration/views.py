@@ -4,14 +4,12 @@ from collections import namedtuple
 import uuid
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from datetime import datetime
 
 def namedtuplefetchall(cursor):
     "Return all rows from a cursor as a namedtuple"
     desc = cursor.description
     nt_result = namedtuple('Result', [col[0] for col in desc])
     return [nt_result(*row) for row in cursor.fetchall()]
-
 
 def get_query(str):
     '''Execute SQL query and return its result as a list'''
@@ -52,36 +50,119 @@ def show_registration_atlet(request):
         sex = bool(request.POST.get('sex'))
 
         print(id, nama, email, negara, lahir, play, tinggi, sex)
-        get_query(f"SELECT * FROM MEMBER;")
 
         # INSERT TO MEMBER
         print("MEMBER :")
-        get_query(f"INSERT INTO MEMBER VALUES ('{id}', '{nama}', '{email}')")
+        get_query(f"INSERT INTO MEMBER VALUES ('{id}', '{nama}', '{email}');")
         print(get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';"))
 
         if get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';") != []:
-            get_query(f"DELETE FROM MEMBER WHERE id = '{id}';")
-            print("uploaded & deleted!")
+            print("uploaded!")
         else :
             print("unsuccesful")
 
         # INSERT TO ATLET
         print("ATLET :")
-        print(get_query("SELECT * FROM ATLET WHERE id = 'b6a2f602-d7fc-4e6b-8d20-c60b79bef849'"))
-        get_query(f"INSERT INTO ATLET VALUES ('{id}', {lahir}, '{negara}', {play}, {tinggi}, '', {sex})")
+        if get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';") != []:
+            get_query(f"INSERT INTO ATLET VALUES ('{id}', '{lahir}', '{negara}', '{play}', '{tinggi}', NULL, '{sex}');")
         print(get_query(f"SELECT * FROM ATLET WHERE id = '{id}';"))
 
         if get_query(f"SELECT * FROM ATLET WHERE id = '{id}';") != []:
-            get_query(f"DELETE FROM ATLET WHERE id = '{id}';")
-            print("uploaded & deleted!")
+            print("uploaded!")
         else :
             print("unsuccesful")
-        return HttpResponseRedirect(reverse('registration:reg_atlet'))
+
+        # INSERT TO ATLET_NONKUALIFIKASI
+        print("ATLET_NONKUALIFIKASI :")
+        if get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';") != []:
+            get_query(f"INSERT INTO ATLET_NONKUALIFIKASI VALUES ('{id}');")
+        print(get_query(f"SELECT * FROM ATLET WHERE id = '{id}';"))
+
+        if get_query(f"SELECT * FROM ATLET_NONKUALIFIKASI WHERE id = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+            
+        return HttpResponseRedirect(reverse('dashboard:dash_atlet'))
     else:
         return render(request, "registration_atlet.html")
-    
+
 def show_registration_pelatih(request):
-    return render(request, "registration_pelatih.html")
+    if request.method == "POST":
+        id = generate_uuid()
+        nama = request.POST.get('nama')
+        email = request.POST.get('email')
+        negara = request.POST.get('negara')
+        mulai = request.POST.get('mulai')
+        kategori = request.POST.get('kategori')
+
+        print(id, nama, email, negara, mulai, kategori)
+
+        # INSERT TO MEMBER
+        print("MEMBER :")
+        get_query(f"INSERT INTO MEMBER VALUES ('{id}', '{nama}', '{email}');")
+        print(get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';"))
+
+        if get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+
+        # INSERT TO PELATIH
+        print("PELATIH :")
+        get_query(f"INSERT INTO PELATIH VALUES ('{id}', '{mulai}');")
+        print(get_query(f"SELECT * FROM PELATIH WHERE id = '{id}';"))
+
+        if get_query(f"SELECT * FROM PELATIH WHERE id = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+
+        # INSERT TO PELATIH_SPESIALISASI
+        kat_id = get_query(f"SELECT id FROM SPESIALISASI WHERE spesialisasi = '{kategori}';")[0].id
+
+        print("PELATIH_SPESIALISASI :")
+        get_query(f"INSERT INTO PELATIH_SPESIALISASI VALUES ('{id}', '{kat_id}');")
+        print(get_query(f"SELECT * FROM PELATIH_SPESIALISASI WHERE id_pelatih = '{id}';"))
+
+        if get_query(f"SELECT * FROM PELATIH_SPESIALISASI WHERE id_pelatih = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+
+        return HttpResponseRedirect(reverse('dashboard:dash_pelatih'))
+    else:
+        return render(request, "registration_pelatih.html")
 
 def show_registration_umpire(request):
-    return render(request, "registration_umpire.html")
+    if request.method == "POST":
+        id = generate_uuid()
+        nama = request.POST.get('nama')
+        email = request.POST.get('email')
+        negara = request.POST.get('negara')
+
+        print(id, nama, email, negara)
+
+        # INSERT TO MEMBER
+        print("MEMBER :")
+        get_query(f"INSERT INTO MEMBER VALUES ('{id}', '{nama}', '{email}');")
+        print(get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';"))
+
+        if get_query(f"SELECT * FROM MEMBER WHERE id = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+
+        # INSERT TO UMPIRE
+        print("PELATIH :")
+        get_query(f"INSERT INTO UMPIRE VALUES ('{id}', '{negara}');")
+        print(get_query(f"SELECT * FROM UMPIRE WHERE id = '{id}';"))
+
+        if get_query(f"SELECT * FROM UMPIRE WHERE id = '{id}';") != []:
+            print("uploaded!")
+        else :
+            print("unsuccesful")
+
+        return HttpResponseRedirect(reverse('dashboard:dash_umpire'))
+    else:
+        return render(request, "registration_umpire.html")
