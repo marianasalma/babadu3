@@ -42,10 +42,11 @@ def show_dashboard_atlet(request):
         cursor.execute(sql)  # ambil status
         total = cursor.fetchone()
         print(total)
-        if total is None:
-            total = 0
+        total_string = ""
+        if total[0] is None:
+            total_string = "0"
         else:
-            total = total[0]
+            total_string = str(total[0])
 
         sql = """SELECT M.Nama
                 FROM MEMBER M
@@ -63,7 +64,7 @@ def show_dashboard_atlet(request):
             'play': right_or_left(atlet[0][3]),
             'tinggi_badan': str(atlet[0][4]),
             'world_rank': atlet[0][5],
-            'total_poin': total,
+            'total_poin': total_string,
             'status': string_status,
             'pelatih': pelatih
         }
@@ -103,21 +104,21 @@ def show_dashboard_pelatih(request):
 
                         WHERE P.ID = M.ID AND PS.ID_Pelatih = P.ID AND PS.ID_SPESIALISASI = S.ID AND P.ID = %s
                         """, [pelatih_id])
-        response['pelatih_spesialisasi'] = cursor.fetchall()  
+        response['pelatih_spesialisasi'] = cursor.fetchall()
         # print(response['pelatih_spesialisai'])
 
         merge = []
         for i in response['pelatih_spesialisasi']:
             merge.append(i[0])
-        
+
         string_sp = ''
         for sp in merge:
             string_sp += " " + sp + ","
 
         spec = string_sp[1:len(string_sp)-1]
-        
+
         new_tuple = (spec,)
-        
+
         response['list_dashboard_pelatih'][0] += new_tuple
         print(response['list_dashboard_pelatih'])
 
@@ -142,7 +143,7 @@ def show_dashboard_umpire(request):
 
         response['list_dashboard_umpire'] = cursor.fetchall()
         print(response['list_dashboard_umpire'])
-    return render(request, "dashboard_umpire.html",response)
+    return render(request, "dashboard_umpire.html", response)
 
 
 def right_or_left(boolean):
