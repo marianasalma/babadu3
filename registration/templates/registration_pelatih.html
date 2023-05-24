@@ -20,8 +20,6 @@
 
 {% block content %}
 
-{% include 'navbar_pelatih.html' %}
-
 <div class="row" style="display: flex; flex-direction: column; align-items: center;">
     <div class="col" style="display: flex; flex-direction: column; align-items: center;">
 
@@ -32,12 +30,12 @@
           <p class="h2">Form Registrasi Pelatih</p>
         </div>
 
-        <form>
+        <form method="post">
           <div class="form-group row">
             <div class="pb-3 pt-3 d-flex justify-content-md-start">
               <label for="inputEmail3" class="col-sm-2 col-form-label">Nama</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Nama">
+                <input name="nama" class="form-control" id="inputEmail3" placeholder="Nama">
               </div>
             </div>
           </div>
@@ -46,7 +44,7 @@
             <div class="pb-3 pt-2 d-flex justify-content-md-start">
               <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                <input name="email" type="email" class="form-control" id="inputEmail3" placeholder="Email">
               </div>
             </div>
           </div>
@@ -55,7 +53,7 @@
             <div class="pb-3 pt-2 d-flex justify-content-md-start">
               <label for="inputEmail3" class="col-sm-2 col-form-label">Negara</label>
               <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputEmail3" placeholder="Negara">
+                <input name="negara" class="form-control" id="inputEmail3" placeholder="Negara">
               </div>
             </div>
           </div>
@@ -65,31 +63,31 @@
             <div class="col-sm-2">Kategori</div>
             <div class="col-sm-10">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                <input class="form-check-input" type="radio" name="kategori" id="gridRadios1" value="Tunggal putra">
                 <label class="form-check-label" for="gridCheck1">
                   Tunggal putra
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                <input class="form-check-input" type="radio" name="kategori" id="gridRadios2" value="Tunggal putri">
                 <label class="form-check-label" for="gridCheck1">
                   Tunggal putri
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                <input class="form-check-input" type="radio" name="kategori" id="gridRadios3" value="Ganda putra">
                 <label class="form-check-label" for="gridCheck1">
                   Ganda putra
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                <input class="form-check-input" type="radio" name="kategori" id="gridRadios4" value="Ganda putri">
                 <label class="form-check-label" for="gridCheck1">
                   Ganda putri
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                <input class="form-check-input" type="radio" name="kategori" id="gridRadios5" value="Ganda campuran">
                 <label class="form-check-label" for="gridCheck1">
                   Ganda campuran
                 </label>
@@ -103,8 +101,8 @@
               <label for="inputEmail3" class="col-sm-2 col-form-label">Tanggal mulai</label>
               <div class="col-sm-10">
                 <div class="input-group flex-nowrap">
-                  <input type="text" class="form-control" placeholder="dd/mm/yy" aria-label="tanggal mulai" aria-describedby="addon-wrapping">
-                  <span class="input-group-text" id="addon-wrapping""><i class="bi bi-calendar-event"></i></span>
+                  <input name="mulai" type="text" class="form-control" placeholder="yyyy-mm-dd" aria-label="tanggal mulai" aria-describedby="addon-wrapping">
+                  <span class="input-group-text" id="addon-wrapping"><i class="bi bi-calendar-event"></i></span>
                 </div>
               </div>
 
@@ -113,7 +111,7 @@
 
         
           <div class="pb-4 pt-4 d-flex justify-content-md-center"">
-            <a href="#" class="btn btn-primary" style="width: 200px; ">Daftar</a>
+            <button type="submit" class="btn btn-primary" style="width: 200px; ">Daftar</button>
           </div>
          
           
