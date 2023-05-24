@@ -9,31 +9,56 @@
 
 {% include 'navbar_pelatih.html' %}
 
-
 <div class="row" style="display: flex; flex-direction: column; align-items: center;">
     <div class="col" style="display: flex; flex-direction: column; align-items: center;">
         <div class="card my-4 shadow">
             <div class="card-body border-dark" style="width: 700px;">
                 <div class="pb-3 pt-4 d-flex justify-content-center">
-                <p class="h2">DAFTAR ATLET</p>
+                    <p class="h2">DAFTAR ATLET</p>
                 </div>
 
-                <form>
+                <form method="POST" action="" id="atletForm">
                     <div class="mb-3">
                         <label for="dropdownAtlet" class="form-label">Atlet yang mau didaftarkan: </label>
                         <select class="form-select" id="dropdownAtlet">
-                            {%for atlet in list_atlet %}
-                            <option value=>Mathew Berge</option>
+                            {% for atlet in list_atlet %}
+                                <option class="dropdown-item" data-atlet="{{ atlet.0 }}">{{ atlet.0 }}</option>
                             {% endfor %}
-                    </select>
+                        </select>
                     </div>    
                     <div class="pb-3 pt-4 d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">SUBMIT</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock content %}
+
+<script>
+    document.getElementById("atletForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission
+        
+        var dropdown = document.getElementById("dropdownAtlet");
+        var selectedAtlet = dropdown.options[dropdown.selectedIndex].getAttribute("data-atlet");
+        
+        // Do something with the selectedAtlet value
+        
+        // Example: Log the selectedAtlet value
+        console.log("Selected Atlet:", selectedAtlet);
+        
+        // You can also make an AJAX request to send the selectedAtlet value to the server-side script
+        // Replace 'process-form.php' with the URL of your server-side script
+        // var xhr = new XMLHttpRequest();
+        // xhr.open("POST", "process-form.php", true);
+        // xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        // xhr.onreadystatechange = function() {
+        //     if (xhr.readyState === 4 && xhr.status === 200) {
+        //         console.log(xhr.responseText);
+        //     }
+        // };
+        // xhr.send("selectedAtlet=" + encodeURIComponent(selectedAtlet));
+    });
+</script>
+
