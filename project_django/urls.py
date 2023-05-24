@@ -26,5 +26,7 @@ urlpatterns = [
     path('dash/', include('dashboard.urls')),
     path('registration/', include('registration.urls')),
     path('trigger_4/', include('trigger_4.urls')),
-    path('logout/', logout, name="logout")
+    path('logout/', logout, name="logout"),
+    path('pelatih/', include('pelatih.urls'))
+
 ]
