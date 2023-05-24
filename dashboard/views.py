@@ -16,7 +16,7 @@ def show_dashboard_atlet(request):
 
         email_user = request.session["email"]
         print(email_user)
-        id_atlet = "69340675-1776-4491-8a8f-24aa617a4542"
+        id_atlet = request.session["id"]
         sql = "SELECT * FROM ATLET WHERE id='"+id_atlet+"'"
         cursor.execute(sql)  # ambil atlet
         atlet = cursor.fetchall()
@@ -29,8 +29,31 @@ def show_dashboard_atlet(request):
 
         sql = "SELECT EXISTS (SELECT 1 FROM atlet_kualifikasi WHERE id_atlet = '"+id_atlet+"');"
         cursor.execute(sql)  # ambil status
-        status = cursor.fetchall()
+        status = cursor.fetchone()
         print(status)
+        if status[0]:
+            string_status = "Qualified"
+        else:
+            string_status = "Not qualified"
+
+        sql = """SELECT SUM(total_point) AS accumulated_points
+                FROM point_history
+                WHERE id_atlet = '{id}';""".format(id=id_atlet)
+        cursor.execute(sql)  # ambil status
+        total = cursor.fetchone()
+        print(total)
+        if total is None:
+            total = 0
+        else:
+            total = total[0]
+
+        sql = """SELECT M.Nama
+                FROM MEMBER M
+                JOIN PELATIH P ON P.ID = M.ID
+                JOIN ATLET_PELATIH AP ON P.ID = AP.ID_Pelatih
+                WHERE AP.ID_Atlet = '{id}';""".format(id=id_atlet)
+        cursor.execute(sql)  # ambil status
+        pelatih = cursor.fetchall()
 
         context = {
             'nama': member[0][1],
@@ -38,8 +61,11 @@ def show_dashboard_atlet(request):
             'email': member[0][2],
             'tgl_lahir': datetime.date.strftime(atlet[0][1], "%d/%m/%Y"),
             'play': right_or_left(atlet[0][3]),
-            'tinggi_badan': atlet[0][4],
+            'tinggi_badan': str(atlet[0][4]),
             'world_rank': atlet[0][5],
+            'total_poin': total,
+            'status': string_status,
+            'pelatih': pelatih
         }
 
     return render(request, "dashboard_atlet.html", context)

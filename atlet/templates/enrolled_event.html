@@ -57,52 +57,33 @@
         <tr>
             <th>Nama Event</th>
             <th>Stadium</th>
-            <th>Hadiah</th>
+            <th>Stadium</th>
             <th>Kategori Superseries</th>
-            <th>Kategori Spesialisasi</th>
             <th>Tanggal Mulai</th>
             <th>Tanggal Selesai</th>
-            <th>Kapasitas</th>
             <th>Unenroll</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td data-label="Kolom 1">Japan Open</td>
-            <td data-label="Kolom 2">Tokyo Metropolitan Gymnasium</td>
-            <td data-label="Kolom 3">Rp 10.272.000.000,00</td>
-            <td data-label="Kolom 4">S750</td>
-            <td data-label="Kolom 5">Tunggal Putri</td>
-            <td data-label="Kolom 6">12 September 2023</td>
-            <td data-label="Kolom 7">17 September 2023</td>
-            <td data-label="Kolom 8">10.000</td>
-            <td data-label="Kolom 9"><a href="#">Unenroll</a></td>
-            
-        </tr>
-        <tr>
-            <td data-label="Kolom 1">Denmark Open</td>
-            <td data-label="Kolom 2">Royal Arena</td>
-            <td data-label="Kolom 3">Rp 11.370.000.000,00</td>
-            <td data-label="Kolom 4">S750</td>
-            <td data-label="Kolom 5">Tunggal Putri</td>
-            <td data-label="Kolom 6">17 Oktober 2023</td>
-            <td data-label="Kolom 7">22 Oktober 2023</td>
-            <td data-label="Kolom 8">13.000</td>
-            <td data-label="Kolom 9"><a href="#">Unenroll</a></td>
-            
-        </tr>
-        <tr>
-            <td data-label="Kolom 1">Denmark Open</td>
-            <td data-label="Kolom 2">Royal Arena</td>
-            <td data-label="Kolom 3">Rp 11.370.000.000,00</td>
-            <td data-label="Kolom 4">S750</td>
-            <td data-label="Kolom 5">Ganda Putri</td>
-            <td data-label="Kolom 6">17 Oktober 2023</td>
-            <td data-label="Kolom 7">22 Oktober 2023</td>
-            <td data-label="Kolom 8">13.000</td>
-            <td data-label="Kolom 9"><a href="#">Unenroll</a></td>
-            
-        </tr>
+        {% for item in list_enrolled %}
+                    <tr>
+                        <td>{{item.nama_event}}</td>
+                        <td>{{item.tahun}}</td>
+                        <td>{{item.stadium}}</td>
+                        <td>{{item.kategori}}</td>
+                        <td>{{item.tgl_mulai}}</td>
+                        <td>{{item.tgl_selesai}}</td>
+                        <td data-label="Kolom 9">
+                            <form method="POST">
+                                {% csrf_token %}
+                            <button class="btn btn-danger" type="submit" name="unenroll" value="{{item.nama_event}}-{{item.tahun}}">
+                                Unenroll
+                              </button>
+                              </form>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
         
     </tbody>
 </table>
