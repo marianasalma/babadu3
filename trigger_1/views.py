@@ -62,15 +62,16 @@ def get_role(nama, email):
     )
 
     if type(atlet_query) == list and len(atlet_query) != 0:
-        print("atlet")      #to be deleted
+        print("atlet")  # to be deleted
         return "atlet"
     elif type(umpire_query) == list and len(umpire_query) != 0:
-        print("umpire")     #to be deleted
+        print("umpire")  # to be deleted
         return "umpire"
     elif type(pelatih_query) == list and len(pelatih_query) != 0:
-        print("pelatih")    #to be deleted
+        print("pelatih")  # to be deleted
         return "pelatih"
-    
+
+
 def get_id(nama, email):
     print("get id")
     query = get_query(
@@ -83,25 +84,25 @@ def get_id(nama, email):
     return str(query.id)
 
 
-
 # Create your views here.
 def login(request):
     request.session.flush()
     request.session.clear_expired()
-    print("login")      #to be deleted
+    print("login")  # to be deleted
 
     if request.method != "POST" and not is_authenticated(request):
         return render(request, 'login.html')
 
     if is_authenticated(request):
-        print("is authenticated")       #to be deleted
+        print("is authenticated")  # to be deleted
         id = str(request.session["id"])
 
         # to be deleted
-        print('Type', type(request.session["id"]), 'UIID', request.session["id"]) 
+        print('Type', type(request.session["id"]),
+              'UIID', request.session["id"])
 
     else:
-        print("is not authenticated")       #to be deleted
+        print("is not authenticated")  # to be deleted
         nama = str(request.POST["nama"])
         email = str(request.POST["email"])
 
@@ -109,6 +110,7 @@ def login(request):
         role = get_role(nama, email)
         id = get_id(nama, email)
         request.session["id"] = id
+        request.session["email"] = email
         request.session["role"] = role
         request.session.set_expiry(0)
         request.session.modified = True
@@ -117,7 +119,7 @@ def login(request):
             messages.error(request, 'Email atau password salah')
             return render(request, 'login.html')
 
-    #to be deleted
+    # to be deleted
     print("DATA:")
     print(nama)
     print(email)
@@ -131,15 +133,15 @@ def login(request):
     print('Type', type(request.session["id"]), 'UIID', request.session["id"])
 
     if role == "atlet":
-        print("redirecting to atlet dashboard")     #to be deleted
-        # return redirect("../../dash/atlet")
-        return redirect("../../trigger_4/daftar-event/")
+        print("redirecting to atlet dashboard")  # to be deleted
+        return redirect("../../dash/atlet")
+        # return redirect("../../trigger_4/daftar-event/")
 
     elif role == "umpire":
-        print("redirecting to umpire dashboard")     #to be deleted
+        print("redirecting to umpire dashboard")  # to be deleted
         return redirect("../../dash/umpire")
     elif role == "pelatih":
-        print("redirecting to pelatih dashboard")     #to be deleted
+        print("redirecting to pelatih dashboard")  # to be deleted
         return redirect("../../dash/pelatih")
 
     return render(request, "login.html", messages)
@@ -150,6 +152,7 @@ def logout(request):
     request.session.clear_expired()
 
     return HttpResponseRedirect(reverse('trigger_1:landing_page'))
+
 
 def landing_page(request):
     return render(request, "landing_page.html")
