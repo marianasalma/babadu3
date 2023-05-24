@@ -77,7 +77,6 @@ def daftar_sponsor(request):
             # Execute the SQL query
             cursor.execute(sql, (str(id_atlet), str(
                 id_sponsor), tgl_mulai, tgl_selesai))
-            # cursor.fetchall()
 
     return render(request, "daftar_sponsor.html", context)
 
@@ -88,6 +87,68 @@ def enrolled_event(request):
 
 def list_event(request):
     return render(request, "list_event.html")
+
+
+def enrolled_partai_event(request):
+    email = request.session['email']  # ini ambil emailnya
+    if email == None:
+        return redirect("../../login")
+    id_atlet = get_id_from_email(email)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT EXISTS ( SELECT id_atlet FROM atlet_kualifikasi WHERE id_atlet = '" +
+                       str(id_atlet)+"');")
+        isQualified = cursor.fetchone()
+        print(isQualified)
+        if not isQualified[0]:
+            return render(request, "not_qualified.html")
+
+        sql = """select distinct 
+                PME.Nomor_Peserta,
+                E.Nama_Event,
+                E.Tahun,
+                S.Nama AS Stadium,
+                PPK.Jenis_Partai,
+                E.Kategori_Superseries,
+                E.Tgl_Mulai,
+                E.Tgl_Selesai
+                from
+                PARTAI_PESERTA_KOMPETISI PPK,
+                PESERTA_MENDAFTAR_EVENT PME
+                JOIN PESERTA_KOMPETISI PK ON PME.Nomor_Peserta = PK.Nomor_Peserta
+                JOIN EVENT E ON PME.Nama_Event = E.Nama_Event AND PME.Tahun = E.Tahun
+                JOIN STADIUM S ON E.Nama_Stadium = S.Nama
+                JOIN ATLET_GANDA AG ON PK.ID_Atlet_Ganda = AG.ID_Atlet_Ganda
+                JOIN ATLET_KUALIFIKASI AK ON AG.ID_Atlet_Kualifikasi = AK.ID_Atlet OR AG.ID_Atlet_Kualifikasi_2 = AK.ID_Atlet
+                WHERE
+                AK.ID_Atlet = '{id}'
+                """.format(id=str(id_atlet))
+        cursor.execute(sql)
+        list_enrolled_tuples = cursor.fetchall()
+        print(list_enrolled_tuples)
+
+        list_enrolled = []
+
+        for i in list_enrolled_tuples:
+            tgl_mulai_event = i[6].strftime("%d %b %Y")
+            tgl_selesai_event = i[7].strftime("%d %b %Y")
+
+            dic = {
+                "nama_event": i[1],
+                "tahun": str(i[2]),
+                "stadium": i[3],
+                "partai": i[4],
+                "kategori": i[5],
+                "tgl_mulai": tgl_mulai_event,
+                "tgl_selesai": tgl_selesai_event
+            }
+            list_enrolled.append(dic)
+
+        print(list_enrolled)
+
+        context = {
+            'list_enrolled': list_enrolled
+        }
+    return render(request, "list_enrolled_partai_event.html", context)
 
 
 def get_all_sponsor(request):
@@ -107,8 +168,11 @@ def get_all_sponsor(request):
             cursor.execute("SELECT nama_brand FROM sponsor WHERE id = '" +
                            str(id_sponsor) + "'")  # ambil nama sponsor
             nama_sponsor = cursor.fetchone()
-            tgl_mulai_sponsor = i[2].strftime("%m/%d/%Y")
-            tgl_selesai_sponsor = i[3].strftime("%m/%d/%Y")
+            # tgl_mulai_sponsor = i[2].strftime("%m/%d/%Y")
+            # tgl_selesai_sponsor = i[3].strftime("%m/%d/%Y")
+            tgl_mulai_sponsor = i[2].strftime("%d %b %Y")
+            tgl_selesai_sponsor = i[3].strftime("%d %b %Y")
+            # %d %b %Y
             dic = {
                 "brand": nama_sponsor[0], "tgl_mulai": tgl_mulai_sponsor, "tgl_selesai": tgl_selesai_sponsor}
             list_sponsors.append(dic)

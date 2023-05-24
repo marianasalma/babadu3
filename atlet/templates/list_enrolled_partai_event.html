@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block meta %}
+{% include 'navbar_atlet.html' %}
+<link rel="stylesheet" href="{% static 'css/atlet.css' %}">
+{% endblock meta %}
+
+{% block content %}
+
+<div class="row" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="card my-4 shadow col-md-8 col-sm-12 col-xs-12">
+            <div class="card-body border-dark">
+                <div class="pb-3 pt-4 d-flex justify-content-center">
+                    <p class="h2">LIST ENROLLED PARTAI KOMPETISI EVENT</p>
+                </div>
+
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Nama Event</th>
+                      <th scope="col">Tahun</th>
+                      <th scope="col">Stadium</th>
+                      <th scope="col">Jenis Partai</th>
+                      <th scope="col">Kategori Superseries</th>
+                      <th scope="col">Tanggal Mulai</th>
+                      <th scope="col">Tanggal Selesai</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in list_enrolled %}
+                    <tr>
+                        <td>{{item.nama_event}}</td>
+                        <td>{{item.tahun}}</td>
+                        <td>{{item.stadium}}</td>
+                        <td>{{item.partai}}</td>
+                        <td>{{item.kategori}}</td>
+                        <td>{{item.tgl_mulai}}</td>
+                        <td>{{item.tgl_selesai}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+    </div>
+</div>
+
+{% endblock content %}

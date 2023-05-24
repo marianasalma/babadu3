@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block meta %}
+{% include 'navbar_atlet.html' %}
+<link rel="stylesheet" href="{% static 'css/atlet.css' %}">
+{% endblock meta %}
+
+{% block content %}
+
+<div class="row" style="display: flex; flex-direction: column; align-items: center;">
+    <div class="col" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="card my-4 shadow col-md-8 col-sm-12 col-xs-12">
+            <div class="card-body border-dark">
+                <div class="pb-3 pt-4 d-flex justify-content-center">
+                    <p class="h2">MAAF, ATLET BELUM TERKUALIFIKASI</p>
+                </div>
+
+    </div>
+</div>
+
+{% endblock content %}
