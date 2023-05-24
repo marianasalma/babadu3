@@ -121,10 +121,6 @@ def login(request):
 
     # to be deleted
     print("DATA:")
-    print(nama)
-    print(email)
-    print(role)
-    print(id)
     print()
     print(request.session["id"])
     print(request.session["role"])

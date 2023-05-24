@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from collections import namedtuple
 from django.db import connection
@@ -26,131 +27,96 @@ def get_query(str):
     
 # Create your views here.
 def pilih_stadium(request):
-    print("test")
+    print("pilih stadium")
 
-    #railway
-    # query  = get_query(
-    #     f'''
-    #     SELECT nama as nama_stadium, kapasitas, negara
-    #     FROM stadium;
-    #     '''
-    # )
-
-    # lokal
     query  = get_query(
         f'''
         SELECT nama as nama_stadium, kapasitas, negara
-        FROM babadu2.stadium;
+        FROM stadium;
         '''
     )
-    print(query)
-    print("test1")
+
     return render(request, 'pilih_stadium.html', {"query":query})
 
+
 def pilih_event(request, nama_stadium):
+    print("pilih event")
+
     current_date = dt.today().strftime("%Y-%m-%d")
 
-    # railway
-    # query = get_query(
-    #     f'''
-    #     SELECT nama_event, total_hadiah, tgl_mulai, kategori_superseries
-    #     FROM event
-    #     WHERE event.nama_stadium='{nama_stadium}' AND tgl_mulai > '{current_date}';
-    #     '''
-    # )
-
-    # lokal
     query = get_query(
         f'''
         SELECT nama_event, total_hadiah, tgl_mulai, kategori_superseries
-        FROM babadu2.event as e
-        WHERE e.nama_stadium='{nama_stadium}' AND tgl_mulai > '{current_date}';
+        FROM event
+        WHERE nama_stadium='{nama_stadium}' AND tgl_mulai > '{current_date}';
         '''
     )
-    # print(query)
 
     return render(request, "pilih_event.html", {"query":query})
 
-# def pilih_event(request):
-#     print("sini2")
-#     return render(request, "pilih_event.html")
 
 def pilih_kategori(request, nama_event, tahun_event):
-    nama = request.session["nama"]
-    email = request.session["email"]
+    print("pilih kategori")
 
-    # railway
-    # query = get_query(
-    #     f'''
-    #     SELECT nama_event, total_hadiah, tgl_mulai, tgl_selesai, 
-    #     kategori_superseries, kapasitas, nama, stadium.negara
-    #     FROM event INNER JOIN stadium ON nama = nama_stadium
-    #     WHERE nama_event = '{nama_event}';
-    #     '''
-    # )[0]
+    id = uuid.UUID(request.session["id"])
+    print(id)
 
-    # jenis_kelamin = get_query(
-    #     f'''
-    #     SELECT jenis_kelamin
-    #     FROM atlet INNER JOIN member ON member.id = atlet.id
-    #     WHERE member.nama = '{nama}' AND member.email = '{email}';
-    #     '''
-    # )[0]
-
-    # ganda_query = get_query(
-    #     f'''
-    #     SELECT jenis_kelamin
-    #     FROM atlet INNER JOIN member ON member.id = atlet.id
-    #     WHERE member.nama = '{nama}' AND member.email = '{email}';
-    #     '''
-    # )
-    # campuran_query = get_query(
-    #     f'''
-    #     SELECT nama, m.id
-    #     FROM atlet as a INNER JOIN member as m ON m.id = a.id
-    #     WHERE nama!='{nama}'
-    #     AND m.id NOT IN (SELECT id_atlet_kualifikasi FROM atlet_ganda)
-    #     AND m.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM atlet_ganda);
-    #     '''
-    # )
-   
-
-    # lokal
     query = get_query(
         f'''
         SELECT nama_event, total_hadiah, tgl_mulai, tgl_selesai, 
         kategori_superseries, kapasitas, nama, stadium.negara
-        FROM babadu2.event INNER JOIN babadu2.stadium ON nama = nama_stadium
-        WHERE nama_event = '{nama_event}';
+        FROM event INNER JOIN stadium ON nama = nama_stadium
+        WHERE nama_event = '{nama_event}' AND tahun = '{tahun_event}';
         '''
     )[0]
 
     jenis_kelamin = get_query(
         f'''
         SELECT jenis_kelamin
-        FROM babadu2.atlet INNER JOIN babadu2.member ON member.id = atlet.id
-        WHERE member.nama = '{nama}' AND member.email = '{email}';
+        FROM atlet 
+        WHERE id = '{id}';
         '''
     )[0]
 
     # PARTNER
     ganda_query = get_query(
         f'''
-        SELECT nama, m.id
-        FROM babadu2.atlet as a INNER JOIN babadu2.member as m ON m.id = a.id
-        WHERE jenis_kelamin='{jenis_kelamin.jenis_kelamin}' AND nama!='{nama}'
-        AND m.id NOT IN (SELECT id_atlet_kualifikasi FROM babadu2.atlet_ganda)
-        AND m.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM babadu2.atlet_ganda);
+        SELECT nama, a.id
+        FROM atlet a INNER JOIN member m ON a.id = m.id
+        WHERE jenis_kelamin='{jenis_kelamin.jenis_kelamin}' AND a.id != '{id}'
+        AND a.id NOT IN (SELECT id_atlet_kualifikasi 
+                        FROM atlet_ganda
+                        )
+        AND a.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM atlet_ganda);
         '''
     )
+    print(ganda_query)
+
+    # ganda_query = get_query(
+    #     f'''
+    #     (select id_atlet_kualifikasi, nama
+    #     from atlet_ganda, member
+    #     where id_atlet_kualifikasi != '{id}' AND id_atlet_kualifikasi = id AND id_atlet_kualifikasi not in (SELECT id_atlet_kualifikasi as a1
+    #     FROM atlet_ganda INNER JOIN atlet b ON id_atlet_kualifikasi = b.id
+    #     INNER JOIN atlet c ON id_atlet_kualifikasi_2 = c.id
+    #     where b.jenis_kelamin = c.jenis_kelamin))
+    #     UNION 
+    #     (select id_atlet_kualifikasi_2, nama
+    #     from atlet_ganda, member
+    #     where id_atlet_kualifikasi != '{id}' AND id_atlet_kualifikasi = id AND id_atlet_kualifikasi_2 not in (SELECT id_atlet_kualifikasi_2 as a2
+    #     FROM atlet_ganda INNER JOIN atlet b ON id_atlet_kualifikasi = b.id
+    #     INNER JOIN atlet c ON id_atlet_kualifikasi_2 = c.id
+    #     where b.jenis_kelamin = c.jenis_kelamin));
+    #     '''
+    # )
 
     campuran_query = get_query(
         f'''
-        SELECT nama, m.id
-        FROM babadu2.atlet as a INNER JOIN babadu2.member as m ON m.id = a.id
-        WHERE nama!='{nama}'
-        AND m.id NOT IN (SELECT id_atlet_kualifikasi FROM babadu2.atlet_ganda)
-        AND m.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM babadu2.atlet_ganda);
+        SELECT m.nama, m.id
+        FROM member m inner join atlet a on a.id = m.id
+        WHERE m.id != '{id}'
+        AND m.id NOT IN (SELECT id_atlet_kualifikasi FROM atlet_ganda)
+        AND m.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM atlet_ganda);
         '''
     )
 
@@ -159,7 +125,7 @@ def pilih_kategori(request, nama_event, tahun_event):
         kapasitas_tunggal = get_query(
             f'''     
             SELECT count(nomor_peserta), k.jenis_partai, k.nama_event, k.tahun_event
-            FROM babadu2.PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN babadu2.PARTAI_KOMPETISI as k 
+            FROM PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN PARTAI_KOMPETISI as k 
             ON k.jenis_partai=p.jenis_partai AND k.nama_event=p.nama_event AND k.tahun_event=p.tahun_event
             WHERE k.jenis_partai = 'TL' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
@@ -169,7 +135,7 @@ def pilih_kategori(request, nama_event, tahun_event):
         kapasitas_ganda = get_query(
             f'''          
             SELECT count(nomor_peserta), k.jenis_partai, k.nama_event, k.tahun_event
-            FROM babadu2.PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN babadu2.PARTAI_KOMPETISI as k 
+            FROM PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN PARTAI_KOMPETISI as k 
             ON k.jenis_partai=p.jenis_partai AND k.nama_event=p.nama_event AND k.tahun_event=p.tahun_event
             WHERE k.jenis_partai = 'GL' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
@@ -179,7 +145,7 @@ def pilih_kategori(request, nama_event, tahun_event):
         kapasitas_tunggal = get_query(
             f'''          
             SELECT count(nomor_peserta), k.jenis_partai, k.nama_event, k.tahun_event
-            FROM babadu2.PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN babadu2.PARTAI_KOMPETISI as k 
+            FROM PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN PARTAI_KOMPETISI as k 
             ON k.jenis_partai=p.jenis_partai AND k.nama_event=p.nama_event AND k.tahun_event=p.tahun_event
             WHERE k.jenis_partai = 'TP' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
@@ -190,7 +156,7 @@ def pilih_kategori(request, nama_event, tahun_event):
         kapasitas_ganda = get_query(
             f'''      
             SELECT count(nomor_peserta), k.jenis_partai, k.nama_event, k.tahun_event
-            FROM babadu2.PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN babadu2.PARTAI_KOMPETISI as k 
+            FROM PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN PARTAI_KOMPETISI as k 
             ON k.jenis_partai=p.jenis_partai AND k.nama_event=p.nama_event AND k.tahun_event=p.tahun_event
             WHERE k.jenis_partai = 'GP' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
@@ -200,7 +166,7 @@ def pilih_kategori(request, nama_event, tahun_event):
     kapasitas_campuran = get_query(
         f'''
         SELECT count(nomor_peserta), k.jenis_partai, k.nama_event, k.tahun_event
-        FROM babadu2.PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN babadu2.PARTAI_KOMPETISI as k 
+        FROM PARTAI_PESERTA_KOMPETISI as p RIGHT OUTER JOIN PARTAI_KOMPETISI as k 
         ON k.jenis_partai=p.jenis_partai AND k.nama_event=p.nama_event AND k.tahun_event=p.tahun_event
         WHERE k.jenis_partai = 'GC' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
         GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);
@@ -208,11 +174,7 @@ def pilih_kategori(request, nama_event, tahun_event):
     )[0]
     
 
-    # print("INI JENIS KELAMIN")
-    # print(jenis_kelamin)
-    # print(ganda_query)
-    # print()
-    # print(campuran_query)
+    
 
     context = {"jenis_kelamin" : jenis_kelamin,
                "query":query,
@@ -224,5 +186,3 @@ def pilih_kategori(request, nama_event, tahun_event):
                }
     print(context)    
     return render(request, "pilih_kategori.html", context)
-
-    # return render(request, "pilih_kategori.html", {"query":query, "jenis_kelamin":jenis_kelamin, "ganda_query":ganda_query, "campuran_query":campuran_query})
