@@ -36,50 +36,67 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>{% if jenis_kelamin.jenis_kelamin == True %}
+                    <form method="post" id="formTunggal">
+                        {% csrf_token %}
+                        <tr>{% if jenis_kelamin.jenis_kelamin == True %}
                             <td>Tunggal Putra</td>
+                            <input type="hidden" name="partai" value="TL">
                         {% elif jenis_kelamin.jenis_kelamin == False %}
                             <td>Tunggal Putri</td>
+                            <input type="hidden" name="partai" value="TP">
                         {% endif %}
                         
                         <td>-</td>
                         <td><p>{{kapasitas_tunggal.count}}/{{query.kapasitas}}</p></td>
                         {% if query.kapasitas > kapasitas_tunggal.count %}
-                            <td><a href="#">Join</a></td>
+                            <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
                         {% endif %}
-                    </tr>
-                    <tr>
-                        {% if jenis_kelamin.jenis_kelamin == True %}
-                            <td>Ganda Putra</td>
-                        {% elif jenis_kelamin.jenis_kelamin == False %}
-                            <td>Ganda Putri</td>
-                        {% endif %}
-                        <td>
-                            <select class="form-select" id="dropdownGandaPutra">
-                                {% for gq in ganda_query%}
-                                    <option value="{{gq.nama}}">{{gq.nama}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td><p>{{kapasitas_ganda.count}}/{{query.kapasitas}}</p></td>
-                        {% if query.kapasitas > kapasitas_ganda.count %}
-                            <td><a href="#">Join</a></td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td>Ganda Campuran</td>
-                        <td>
-                            <select class="form-select" id="dropdownGandaCampuran">
-                                {% for cq in campuran_query%}
-                                    <option value="{{cq.nama}}">{{cq.nama}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td><p>{{kapasitas_campuran.count}}/{{query.kapasitas}}</p></td>
-                        {% if query.kapasitas > kapasitas_campuran.count %}
-                            <td><a href="#">Join</a></td>
-                        {% endif %}
-                    </tr>
+                        </tr>
+                    </form>
+                    
+                    <form method="post" id="formGanda">
+                        {% csrf_token %}
+                        <tr>
+                            {% if jenis_kelamin.jenis_kelamin == True %}
+                                <td>Ganda Putra</td>
+                                <input type="hidden" name="partai" value="GL">
+                            {% elif jenis_kelamin.jenis_kelamin == False %}
+                                <td>Ganda Putri</td>
+                                <input type="hidden" name="partai" value="GP">
+                            {% endif %}
+                            <td>
+                                <select class="form-select" name="dropdownGanda">
+                                    {% for gq in ganda_query%}
+                                        <option value="{{gq.id}}">{{gq.nama}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><p>{{kapasitas_ganda.count}}/{{query.kapasitas}}</p></td>
+                            {% if query.kapasitas > kapasitas_ganda.count %}
+                                <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
+                            {% endif %}
+                        </tr>
+                    </form>
+
+                    <form method="post" id="formGandaCampuran">
+                        {% csrf_token %}
+                        <tr>
+                            <td>Ganda Campuran</td>
+                            <input type="hidden" name="partai" value="GC">
+                            <td>
+                                <select class="form-select" name="dropdownGandaCampuran">
+                                    {% for cq in campuran_query%}
+                                        <option value="{{cq.id}}">{{cq.nama}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><p>{{kapasitas_campuran.count}}/{{query.kapasitas}}</p></td>
+                            {% if query.kapasitas > kapasitas_campuran.count %}
+                                <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
+                            {% endif %}
+                        </tr>
+                    </form>
+
                     </tbody>
                 </table>
             </div>
