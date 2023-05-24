@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime
+from datetime import date
 from django.shortcuts import redirect, render
 from django.db import connection
 from django.http import JsonResponse
@@ -57,7 +58,7 @@ def daftar_sponsor(request):
 
     if request.method == "POST":
         id_sponsor = request.POST.get('dropdown')
-        # print(id_sponsor)
+        print(id_sponsor)
 
         tgl_mulai_str = request.POST.get('tgl_mulai')  # format dd/mm/yy
         tgl_mulai = convert_date_string(tgl_mulai_str)
@@ -68,13 +69,15 @@ def daftar_sponsor(request):
         print(tgl_mulai)
         print(tgl_selesai)
 
-        # with connection.cursor() as cursor:
+        with connection.cursor() as cursor:
 
-        #     # Prepare the SQL query with the date value
-        #     sql = "INSERT INTO ATLET_SPONSOR (id_atlet, id_sponsor, tgl_mulai, tgl_selesai) VALUES (%s,%s,%s,%s)"
+            # Prepare the SQL query with the date value
+            sql = "INSERT INTO ATLET_SPONSOR (id_atlet, id_sponsor, tgl_mulai, tgl_selesai) VALUES (%s,%s,%s,%s)"
 
-        #     # Execute the SQL query
-        #     cursor.execute(sql, (id_atlet,id_sponsor,tgl_mulai,tgl_selesai))
+            # Execute the SQL query
+            cursor.execute(sql, (str(id_atlet), str(
+                id_sponsor), tgl_mulai, tgl_selesai))
+            # cursor.fetchall()
 
     return render(request, "daftar_sponsor.html", context)
 
@@ -87,7 +90,6 @@ def list_event(request):
     return render(request, "list_event.html")
 
 
-########
 def get_all_sponsor(request):
     email = request.session['email']  # ini ambil emailnya
     if email == None:
@@ -128,9 +130,10 @@ def convert_date_string(date_string):
         day = datetime_obj.day
         month = datetime_obj.month
         year = datetime_obj.year
+        print(year)
 
         # Create a date object from the extracted values
-        date_obj = datetime.date(year, month, day)
+        date_obj = date(year, month, day)
 
         return date_obj
     except ValueError:
