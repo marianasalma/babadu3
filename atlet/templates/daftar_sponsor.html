@@ -2,9 +2,10 @@
 
 {% block meta %}
 {% include 'navbar_atlet.html' %}
-
+<!-- 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script> -->
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
 <style>
@@ -31,18 +32,17 @@
           <p class="h2">DAFTAR SPONSOR</p>
         </div>
 
-        <form>
+        <form method="POST">
+          {% csrf_token %}
           <div class="form-group row">
             <div class="pb-3 pt-3 d-flex justify-content-md-start">
               <label for="inputEmail3" class="col-sm-3 col-form-label">Nama Sponsor</label>
               <div class="col-sm-9">
-                    <select class="form-select" id="dropdownSponsor">
+                    <select class="form-select" id="dropdownSponsor" name="dropdown">
                     <option value="--Select Option--">--Select Option--</option>
-                    <option value="Flypower">Flypower</option>
-                    <option value="Yonex">Yonex</option>
-                    <option value="Victor">Victor</option>
-                    <option value="Daihatsu">Daihatsu</option>
-                    <option value="Toyota">Toyota</option>
+                    {% for item in list_sponsors %}
+                    <option value="{{item.id}}">{{item.brand}}</option>
+                    {% endfor %}
                     </select>
               </div>
             </div>
@@ -53,8 +53,8 @@
               <label for="inputEmail3" class="col-sm-3 col-form-label">Tanggal Mulai</label>
               <div class="col-sm-9">
                 <div class="input-group flex-nowrap">
-                  <input type="text" class="form-control" placeholder="dd/mm/yy" aria-label="tanggal mulai" aria-describedby="addon-wrapping">
-                  <span class="input-group-text" id="addon-wrapping""><i class="bi bi-calendar-event"></i></span>
+                  <input type="text" name="tgl_mulai" class="form-control" placeholder="dd/mm/yy" aria-label="tanggal mulai" aria-describedby="addon-wrapping">
+                  <span class="input-group-text" id="addon-wrapping"><i class="bi bi-calendar-event"></i></span>
                 </div>
               </div>
             </div>
@@ -65,17 +65,18 @@
               <label for="inputEmail3" class="col-sm-3 col-form-label">Tanggal Selesai</label>
               <div class="col-sm-9">
                 <div class="input-group flex-nowrap">
-                  <input type="text" class="form-control" placeholder="dd/mm/yy" aria-label="tanggal selesai" aria-describedby="addon-wrapping">
-                  <span class="input-group-text" id="addon-wrapping""><i class="bi bi-calendar-event"></i></span>
+                  <input name="tgl_selesai" type="text" class="form-control" placeholder="dd/mm/yy" aria-label="tanggal selesai" aria-describedby="addon-wrapping">
+                  <span class="input-group-text" id="addon-wrapping"><i class="bi bi-calendar-event"></i></span>
                 </div>
               </div>
             </div>
           </div>
-
-        
-          <div class="pb-4 pt-4 d-flex justify-content-md-center"">
-            <a href="#" class="btn btn-primary" style="width: 200px; ">Submit</a>
+          <div class="pb-4 pt-4 d-flex justify-content-md-center">
+          <input class="btn btn-primary" type="submit" name="submit" value="Submit">
           </div>
+        </form>
+
+          
          
           
 {% endblock content %}

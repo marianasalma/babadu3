@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'dashboard',
     'registration',
     'trigger_4',
-    'trigger_1'
+    'trigger_1',
+    'pelatih'
 ]
 
 MIDDLEWARE = [

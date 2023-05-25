@@ -2,43 +2,38 @@
 
 {% load static %}
 {% block meta %}
+{% include 'navbar_atlet.html' %}
 <link rel="stylesheet" href="{% static 'css/atlet.css' %}">
 {% endblock meta %}
 
 {% block content %}
-{% include 'navbar_atlet.html' %}
-
 
 <div class="row" style="display: flex; flex-direction: column; align-items: center;">
     <div class="col" style="display: flex; flex-direction: column; align-items: center;">
         <div class="card my-4 shadow col-md-8 col-sm-12 col-xs-12">
             <div class="card-body border-dark">
                 <div class="pb-3 pt-4 d-flex justify-content-center">
-                    <p class="h2">DAFTAR EVENT</p>
+                    <p class="h2">LIST SPONSOR</p>
                 </div>
 
                 <table class="table">
-                <thead>
+                  <thead>
                     <tr>
-                    <th scope="col">Nama Stadium</th>
-                    <th scope="col">Negara</th>
-                    <th scope="col">Kapasitas</th>
-                    <th scope="col">Action</th>
+                      <th scope="col">Nama Sponsor</th>
+                      <th scope="col">Tanggal Mulai</th>
+                      <th scope="col">Tanggal Selesai</th>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for q in query%}
+                  </thead>
+                  <tbody>
+                    {% for item in list_sponsors %}
                     <tr>
-                        <td>{{q.nama_stadium}}</td>
-                        <td>{{q.negara}}</td>
-                        <td>{{q.kapasitas}}</td>
-                        <td><a href="../daftar-event/stadium/{{q.nama_stadium}}/">Pilih</a></td>
-                    </tr>
+                        <td>{{item.brand}}</td>
+                        <td>{{item.tgl_mulai}}</td>
+                        <td>{{item.tgl_selesai}}</td>
                     {% endfor %}
-                </tbody>
+                    
+                  </tbody>
                 </table>
-            </div>
-        </div>
     </div>
 </div>
 
