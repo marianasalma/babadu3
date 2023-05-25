@@ -47,8 +47,8 @@
                         {% endif %}
                         
                         <td>-</td>
-                        <td><p>{{kapasitas_tunggal.count}}/{{query.kapasitas}}</p></td>
-                        {% if query.kapasitas > kapasitas_tunggal.count %}
+                        <td><p>{{kapasitas_tunggal}}/{{query.kapasitas}}</p></td>
+                        {% if query.kapasitas > kapasitas_tunggal %}
                             <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
                         {% endif %}
                         </tr>
@@ -71,8 +71,8 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><p>{{kapasitas_ganda.count}}/{{query.kapasitas}}</p></td>
-                            {% if query.kapasitas > kapasitas_ganda.count %}
+                            <td><p>{{kapasitas_ganda}}/{{query.kapasitas}}</p></td>
+                            {% if query.kapasitas > kapasitas_ganda %}
                                 <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
                             {% endif %}
                         </tr>
@@ -90,13 +90,21 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><p>{{kapasitas_campuran.count}}/{{query.kapasitas}}</p></td>
-                            {% if query.kapasitas > kapasitas_campuran.count %}
+                            <td><p>{{kapasitas_campuran}}/{{query.kapasitas}}</p></td>
+                            {% if query.kapasitas > kapasitas_campuran %}
                                 <td><button type="submit" class="btn btn-primary btn-block mb-12">Join</button></td>
                             {% endif %}
                         </tr>
                     </form>
-
+                    {% if message != "" %}
+                    <div class="d-flex justify-content-center pb-0 mt-0 mb-2">
+                        <p class="text-danger">{{message}}</p>
+                    </div>
+                    {% elif success != "" %}
+                    <div class="d-flex justify-content-center pb-0 mt-0 mb-2">
+                        <p class="text-success">{{success}}</p>
+                    </div>
+                    {% endif %} 
                     </tbody>
                 </table>
             </div>

@@ -59,7 +59,273 @@ def pilih_kategori(request, nama_event, tahun_event):
     print("pilih kategori")
 
     id = uuid.UUID(request.session["id"])
+    message = ""
+    success = ""
     # print(id)
+    
+    if request.method == 'POST':
+        if request.POST.get("partai") == 'TP' or request.POST.get("partai") == 'TL':
+            partai = request.POST.get("partai")
+            print("Partai: " + partai)
+            print()
+
+
+            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
+            query_peserta_kompetisi = get_query(
+                f'''
+                SELECT nomor_peserta
+                FROM peserta_kompetisi
+                WHERE id_atlet_kualifikasi = '{id}';
+                '''
+            )
+
+            print("query_peserta_kompetisi: " )
+            print(query_peserta_kompetisi)
+            print()
+
+            # insert atlet ke PESERTA KOMPETISI
+            if len(query_peserta_kompetisi) == 0:
+                print("insert atlet ke peserta kompetisi")
+
+                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;")[0]
+                nomor_peserta = nomor_peserta.max + 1
+                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_rank = world_rank.world_rank
+                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_tour_rank = world_tour_rank.world_tour_rank
+
+                print("nomor peserta: ")
+                print(nomor_peserta)
+                print("world rank: ")
+                print(world_rank)
+                print("world tour rank: ")
+                print(world_tour_rank)
+                print()
+
+                # INSERT
+                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', NULL, '{id}', '{world_rank}', '{world_tour_rank}');")
+
+            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_kualifikasi='{id}';")[0]
+            nomor_peserta = nomor_peserta.nomor_peserta
+            print("nomor peserta: ")
+            print(nomor_peserta)
+            print()
+
+            print("insert to partai kompetisi")
+            # Insert ke partai kompetisi
+            try:
+                cursor = connection.cursor()
+                cursor.execute(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
+                success = "Berhasil mendaftar!"
+            except Exception as e:
+                message = e
+            finally:
+                cursor.close()
+
+
+        elif request.POST.get("partai") == 'GP' or request.POST.get("partai") == 'GL':
+            partai = request.POST.get("partai")
+            id_partner = request.POST.get('dropdownGanda')
+            print("Partai: " + partai)
+            print("Id partner: ")
+            print(id_partner)
+            print()
+
+            # cek apakah data sudah ada di ATLET_GANDA
+            query_atlet_ganda = get_query(
+                f'''
+                (SELECT id_atlet_ganda 
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}')
+                UNION
+                (SELECT id_atlet_ganda 
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id_partner}' AND id_atlet_kualifikasi_2 = '{id}')
+                ;
+                '''
+            )
+
+            print("query_atlet_ganda: " )
+            print(query_atlet_ganda)
+            print()
+            
+            if len(query_atlet_ganda) == 0:
+                print("insert ke atlet ganda")
+
+                id_atlet_ganda = str(uuid.uuid4())
+
+                # query insert data atlet ganda
+                get_query(f"INSERT INTO ATLET_GANDA VALUES('{id_atlet_ganda}', '{id}', '{id_partner}');")
+                # tes = get_query(f"SELECT * FROM ATLET_GANDA WHERE id_atlet_kualifikasi='{id}';")
+
+            # menyimpan nilai id_atlet_ganda
+            id_atlet_ganda = get_query(
+                f'''
+                SELECT id_atlet_ganda
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}';
+                '''
+            )[0]
+            id_atlet_ganda = id_atlet_ganda.id_atlet_ganda
+            print("id atlet ganda: ")
+            print(id_atlet_ganda)
+
+            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
+            query_peserta_kompetisi = get_query(
+                f'''
+                SELECT nomor_peserta
+                FROM peserta_kompetisi
+                WHERE id_atlet_ganda = '{id_atlet_ganda}';
+                '''
+            )
+
+            print("query_peserta_kompetisi: " )
+            print(query_peserta_kompetisi)
+            print()
+
+            # insert atlet ke PESERTA KOMPETISI
+            if len(query_peserta_kompetisi) == 0:
+                print("insert atlet ke peserta kompetisi")
+
+                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;")[0]
+                nomor_peserta = nomor_peserta.max + 1
+                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_rank = world_rank.world_rank
+                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_tour_rank = world_tour_rank.world_tour_rank
+
+                print("nomor peserta: ")
+                print(nomor_peserta)
+                print("world rank: ")
+                print(world_rank)
+                print("world tour rank: ")
+                print(world_tour_rank)
+                print()
+
+                # INSERT
+                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', '{id_atlet_ganda}', NULL, '{world_rank}', '{world_tour_rank}');")
+
+            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_ganda='{id_atlet_ganda}';")[0]
+            nomor_peserta = nomor_peserta.nomor_peserta
+            print("nomor peserta: ")
+            print(nomor_peserta)
+            print()
+
+            print("insert to partai kompetisi")
+            # Insert ke partai kompetisi
+
+            try:
+                cursor = connection.cursor()
+                cursor.execute(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
+                print("berhasil")
+                success = "Berhasil mendaftar!"
+            except Exception as e:
+                print("gagal")
+                message = e
+            finally:
+                cursor.close()
+
+        elif request.POST.get("partai") == 'GC':
+            partai = request.POST.get("partai")
+            id_partner = request.POST.get('dropdownGandaCampuran')
+
+            print("Partai: " + partai)
+            print("Id partner: ")
+            print(id_partner)
+            print()
+
+            # cek apakah data sudah ada di ATLET_GANDA
+            query_atlet_ganda = get_query(
+                f'''
+                (SELECT id_atlet_ganda 
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}')
+                UNION
+                (SELECT id_atlet_ganda 
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id_partner}' AND id_atlet_kualifikasi_2 = '{id}')
+                ;
+                '''
+            )
+
+            print("query_atlet_ganda: " )
+            print(query_atlet_ganda)
+            print()
+            
+            if len(query_atlet_ganda) == 0:
+                print("insert ke atlet ganda")
+                id_atlet_ganda = str(uuid.uuid4())
+
+                # query insert data atlet ganda
+                get_query(f"INSERT INTO ATLET_GANDA VALUES('{id_atlet_ganda}', '{id}', '{id_partner}');")
+                # tes = get_query(f"SELECT * FROM ATLET_GANDA WHERE id_atlet_kualifikasi='{id}';")
+
+            # menyimpan nilai id_atlet_ganda
+            id_atlet_ganda = get_query(
+                f'''
+                SELECT id_atlet_ganda
+                FROM atlet_ganda
+                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}';
+                '''
+            )[0]
+            id_atlet_ganda = id_atlet_ganda.id_atlet_ganda
+            print("id atlet ganda: ")
+            print(id_atlet_ganda)
+
+            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
+            query_peserta_kompetisi = get_query(
+                f'''
+                SELECT nomor_peserta
+                FROM peserta_kompetisi
+                WHERE id_atlet_ganda = '{id_atlet_ganda}';
+                '''
+            )
+
+            print("query_peserta_kompetisi: " )
+            print(query_peserta_kompetisi)
+            print()
+
+            # insert atlet ke PESERTA KOMPETISI
+            if len(query_peserta_kompetisi) == 0:
+                print("insert atlet ke peserta kompetisi")
+
+                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;")[0]
+                nomor_peserta = nomor_peserta.max + 1
+                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_rank = world_rank.world_rank
+                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")[0]
+                world_tour_rank = world_tour_rank.world_tour_rank
+
+                print("nomor peserta: ")
+                print(nomor_peserta)
+                print("world rank: ")
+                print(world_rank)
+                print("world tour rank: ")
+                print(world_tour_rank)
+                print()
+
+                # INSERT
+                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', '{id_atlet_ganda}', NULL, '{world_rank}', '{world_tour_rank}');")
+
+            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_ganda='{id_atlet_ganda}';")[0]
+            nomor_peserta = nomor_peserta.nomor_peserta
+            print("nomor peserta: ")
+            print(nomor_peserta)
+            print()
+
+            print("insert to partai kompetisi")
+            # Insert ke partai kompetisi
+            try:
+                cursor = connection.cursor()
+                cursor.execute(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
+                print("berhasil")
+                success = "Berhasil mendaftar!"
+            except Exception as e:
+                print("gagal")
+                message = e
+            finally:
+                cursor.close()
+
 
     query = get_query(
         f'''
@@ -86,8 +352,8 @@ def pilih_kategori(request, nama_event, tahun_event):
         WHERE jenis_kelamin='{jenis_kelamin.jenis_kelamin}' AND a.id != '{id}'
         AND a.id NOT IN (SELECT id_atlet_kualifikasi 
                         FROM atlet_ganda
-                        )
-        AND a.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM atlet_ganda)
+                        WHERE id_atlet_kualifikasi_2 != '{id}')
+        AND a.id NOT IN (SELECT id_atlet_kualifikasi_2 FROM atlet_ganda WHERE id_atlet_kualifikasi != '{id}')
         AND a.id IN (SELECT id_atlet FROM atlet_kualifikasi);
         '''
     )
@@ -132,7 +398,7 @@ def pilih_kategori(request, nama_event, tahun_event):
             WHERE k.jenis_partai = 'TL' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
             '''
-        )[0]
+        )
 
         kapasitas_ganda = get_query(
             f'''          
@@ -142,7 +408,7 @@ def pilih_kategori(request, nama_event, tahun_event):
             WHERE k.jenis_partai = 'GL' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
             '''
-        )[0]
+        )
     else:
         kapasitas_tunggal = get_query(
             f'''          
@@ -152,7 +418,7 @@ def pilih_kategori(request, nama_event, tahun_event):
             WHERE k.jenis_partai = 'TP' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
             '''
-        )[0]
+        )
 
 
         kapasitas_ganda = get_query(
@@ -163,7 +429,7 @@ def pilih_kategori(request, nama_event, tahun_event):
             WHERE k.jenis_partai = 'GP' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
             GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);            
             '''
-        )[0]
+        )
 
     kapasitas_campuran = get_query(
         f'''
@@ -173,152 +439,26 @@ def pilih_kategori(request, nama_event, tahun_event):
         WHERE k.jenis_partai = 'GC' AND k.nama_event = '{nama_event}' AND k.tahun_event = '{tahun_event}'
         GROUP BY (k.jenis_partai, k.nama_event, k.tahun_event);
         '''
-    )[0]
-    
-    if request.method == 'POST':
-        if request.POST.get("partai") == 'TP' or request.POST.get("partai") == 'TL':
-            partai = request.POST.get("partai")
-            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
-            query_peserta_kompetisi = get_query(
-                f'''
-                SELECT nomor_peserta
-                FROM peserta_kompetisi
-                WHERE id_atlet_kuaifikasi = '{id}';
-                '''
-            )
+    )
 
-            # insert atlet ke PESERTA KOMPETISI
-            if len(query_peserta_kompetisi) == 0:
-                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;") + 1
-                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
-                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
+    if(kapasitas_tunggal == []):
+        kapasitas_tunggal = 0
+    else:
+        kapasitas_tunggal = kapasitas_tunggal[0].count
 
-                # INSERT
-                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', NULL, '{id}', '{world_rank}', '{world_tour_rank}');")
+    if(kapasitas_ganda == []):
+        kapasitas_ganda = 0
+    else:
+        kapasitas_ganda = kapasitas_ganda[0].count
 
-            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_kualifikasi='{id}';")
+    if(kapasitas_campuran == []):
+        kapasitas_campuran = 0
+    else:
+        kapasitas_campuran = kapasitas_campuran[0].count
 
-            # Insert ke partai kompetisi
-            get_query(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
-
-
-
-        elif request.POST.get("partai") == 'GP' or request.POST.get("partai") == 'GL':
-            partai = request.POST.get("partai")
-            id_partner = request.POST.get('dropdownGanda')
-
-            # cek apakah data sudah ada di ATLET_GANDA
-            query_atlet_ganda = get_query(
-                f'''
-                (SELECT id_atlet_ganda 
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}')
-                UNION
-                (SELECT id_atlet_ganda 
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id_partner}' AND id_atlet_kualifikasi_2 = '{id}')
-                ;
-                '''
-            )
-            # print(query_atlet_ganda)
-            
-            if len(query_atlet_ganda) == 0:
-                id_atlet_ganda = str(uuid.uuid4())
-
-                # query insert data atlet ganda
-                get_query(f"INSERT INTO ATLET_GANDA VALUES('{id_atlet_ganda}', '{id}', '{id_partner}');")
-                # tes = get_query(f"SELECT * FROM ATLET_GANDA WHERE id_atlet_kualifikasi='{id}';")
-
-            # menyimpan nilai id_atlet_ganda
-            id_atlet_ganda = get_query(
-                f'''
-                SELECT id_atlet_ganda
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}');
-                '''
-            )
-
-            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
-            query_peserta_kompetisi = get_query(
-                f'''
-                SELECT nomor_peserta
-                FROM peserta_kompetisi
-                WHERE id_atlet_ganda = '{id_atlet_ganda}';
-                '''
-            )
-
-            # insert atlet ke PESERTA KOMPETISI
-            if len(query_peserta_kompetisi) == 0:
-                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;") + 1
-                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
-                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
-
-                # INSERT
-                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', '{id_atlet_ganda}', NULL, '{world_rank}', '{world_tour_rank}');")
-
-            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_ganda='{id_atlet_ganda}';")
-
-            # Insert ke partai kompetisi
-            get_query(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
-
-
-        elif request.POST.get("partai") == 'GC':
-            partai = request.POST.get("partai")
-            id_partner = request.POST.get('dropdownGandaCampuran')
-
-            query_atlet_ganda = get_query(
-                f'''
-                (SELECT id_atlet_ganda 
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}')
-                UNION
-                (SELECT id_atlet_ganda 
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id_partner}' AND id_atlet_kualifikasi_2 = '{id}')
-                ;
-                '''
-            )
-            # print(query_atlet_ganda)
-            
-            if len(query_atlet_ganda) == 0:
-                id_atlet_ganda = str(uuid.uuid4())
-
-                # query insert data atlet ganda
-                get_query(f"INSERT INTO ATLET_GANDA VALUES('{id_atlet_ganda}', '{id}', '{id_partner}');")
-                # tes = get_query(f"SELECT * FROM ATLET_GANDA WHERE id_atlet_kualifikasi='{id}';")
-
-            # menyimpan nilai id_atlet_ganda
-            id_atlet_ganda = get_query(
-                f'''
-                SELECT id_atlet_ganda
-                FROM atlet_ganda
-                WHERE id_atlet_kualifikasi = '{id}' AND id_atlet_kualifikasi_2 = '{id_partner}');
-                '''
-            )
-
-            # cek apakah atlet sudah terdaftar di PESERTA_KOMPETISI
-            query_peserta_kompetisi = get_query(
-                f'''
-                SELECT nomor_peserta
-                FROM peserta_kompetisi
-                WHERE id_atlet_ganda = '{id_atlet_ganda}';
-                '''
-            )
-
-            # insert atlet ke PESERTA KOMPETISI
-            if len(query_peserta_kompetisi) == 0:
-                nomor_peserta = get_query(f"SELECT max(nomor_peserta) FROM peserta_kompetisi;") + 1
-                world_rank = get_query(f"SELECT world_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
-                world_tour_rank = get_query(f"SELECT world_tour_rank FROM atlet_kualifikasi WHERE id_atlet='{id}';")
-
-                # INSERT
-                get_query(f"INSERT INTO PESERTA_KOMPETISI VALUES('{nomor_peserta}', '{id_atlet_ganda}', NULL, '{world_rank}', '{world_tour_rank}');")
-
-            nomor_peserta = get_query(f"SELECT nomor_peserta FROM peserta_kompetisi WHERE id_atlet_ganda='{id_atlet_ganda}';")
-
-            # Insert ke partai kompetisi
-            get_query(f"INSERT INTO PARTAI_PESERTA_KOMPETISI VALUES('{partai}', '{nama_event}', '{tahun_event}', '{nomor_peserta}');")
-
+    print(kapasitas_tunggal)
+    print(kapasitas_ganda)
+    print(kapasitas_campuran)
 
     context = {"jenis_kelamin" : jenis_kelamin,
                "query":query,
@@ -326,7 +466,9 @@ def pilih_kategori(request, nama_event, tahun_event):
                "campuran_query":campuran_query,
                "kapasitas_tunggal": kapasitas_tunggal,
                "kapasitas_ganda": kapasitas_ganda,
-               "kapasitas_campuran": kapasitas_campuran
+               "kapasitas_campuran": kapasitas_campuran,
+               "message": message,
+               "success": success
                }
     # print(context)    
     return render(request, "pilih_kategori.html", context)
