@@ -50,6 +50,7 @@
 
 <h1>PERTANDINGAN SEMIFINAL</h1>
 <h3>[00:00]</h3>
+<form method="post">
 <table>
     <thead>
         <tr>
@@ -61,36 +62,47 @@
     </thead>
     <tbody>
         <tr>
-            <td data-label="Kolom 1">A</td>
-            <td data-label="Kolom 2">D</td>
+            <td data-label="Kolom 1">{{ pertandingan.0.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.1.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-1" onclick="decrement('1')">-</button>
+      <input id='score-1' name='score-1' type=number min=0>
+      <button id="increment-1" onclick="increment('1')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-2" onclick="decrement('2')">-</button>
+      <input id='score-2' name='score-2' type=number min=0>
+      <button id="increment-2" onclick="increment('2')">+</button>
     </div></td>
         </tr>
         <tr>
-            <td data-label="Kolom 1">E</td>
-            <td data-label="Kolom 2">G</td>
+            <td data-label="Kolom 1">{{ pertandingan.2.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.3.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-3" onclick="decrement('3')">-</button>
+      <input id='score-3' name='score-3' type=number min=0>
+      <button id="increment-3" onclick="increment('3')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-4" onclick="decrement('4')">-</button>
+      <input id='score-4' name='score-4' type=number min=0>
+      <button id="increment-4" onclick="increment('4')">+</button>
     </div></td>
         </tr>
-        
+        </tr>
         
     </tbody>
 </table>
-<button id="centered-button">Next</button>
+</table>
+<button id="centered-button" type="submit">Next</button>
+</form>
+
+<script>
+function increment(id) {
+    document.getElementById('score-' + id).stepUp();
+}
+function decrement(id) {
+    document.getElementById('score-' + id).stepDown();
+}
+</script>
 {% endblock content %}

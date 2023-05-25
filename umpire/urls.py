@@ -5,7 +5,7 @@ from umpire.views import show_hasil
 from umpire.views import show_perempat
 from umpire.views import *
 
-app_name = 'wishlist'
+app_name = 'umpire'
 
 urlpatterns = [
     path('perempat', show_perempat, name='show_perempat'),
