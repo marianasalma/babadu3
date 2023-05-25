@@ -49,8 +49,9 @@
 {% block content %}
 {% include 'navbar_umpire.html' %}
 
-<h1>PERTANDINGAN PEREMPAT FINAL</h1>
+<h1 onload="stopWatch()">PERTANDINGAN PEREMPAT FINAL</h1>
 <h3>[00:00]</h3>
+<form method="post">
 <table>
     <thead>
         <tr>
@@ -62,64 +63,74 @@
     </thead>
     <tbody>
         <tr>
-            <td data-label="Kolom 1">A</td>
-            <td data-label="Kolom 2">B</td>
+            <td data-label="Kolom 1">{{ pertandingan.0.0.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.0.1.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-1" onclick="decrement('1')">-</button>
+      <input id='score-1' name='score-1' type=number min=0>
+      <button id="increment-1" onclick="increment('1')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-2" onclick="decrement('2')">-</button>
+      <input id='score-2' name='score-2' type=number min=0>
+      <button id="increment-2" onclick="increment('2')">+</button>
     </div></td>
         </tr>
         <tr>
-            <td data-label="Kolom 1">C</td>
-            <td data-label="Kolom 2">D</td>
+            <td data-label="Kolom 1">{{ pertandingan.1.0.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.1.1.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-3" onclick="decrement('3')">-</button>
+      <input id='score-3' name='score-3' type=number min=0>
+      <button id="increment-3" onclick="increment('3')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-4" onclick="decrement('4')">-</button>
+      <input id='score-4' name='score-4' type=number min=0>
+      <button id="increment-4" onclick="increment('4')">+</button>
     </div></td>
         </tr>
         <tr>
-            <td data-label="Kolom 1">E</td>
-            <td data-label="Kolom 2">F</td>
+            <td data-label="Kolom 1">{{ pertandingan.2.0.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.2.1.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-5" onclick="decrement('5')">-</button>
+      <input id='score-5' name='score-5' type=number min=0>
+      <button id="increment-5" onclick="increment('5')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-6" onclick="decrement('6')">-</button>
+      <input id='score-6' name='score-6' type=number min=0>
+      <button id="increment-6" onclick="increment('6')">+</button>
     </div></td>
         </tr>
         <tr>
-            <td data-label="Kolom 1">G</td>
-            <td data-label="Kolom 2">H</td>
+            <td data-label="Kolom 1">{{ pertandingan.3.0.2 }}</td>
+            <td data-label="Kolom 2">{{ pertandingan.3.1.2 }}</td>
             <td data-label="Kolom 3"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-7" onclick="decrement('7')">-</button>
+      <input id='score-7' name='score-7' type=number min=0>
+      <button id="increment-7" onclick="increment('7')">+</button>
     </div></td>
             <td data-label="Kolom 4"><div>
-      <button id="decrement">-</button>
-      <span id="count">0</span>
-      <button id="increment">+</button>
+      <button id="decrement-8" onclick="decrement('8')">-</button>
+      <input id='score-8' name='score-8' type=number min=0>
+      <button id="increment-8" onclick="increment('8')">+</button>
     </div>
   </td>
         </tr>
         
     </tbody>
 </table>
-<button id="centered-button">Next</button>
+<button id="centered-button" type="submit">Next</button>
+</form>
+
+<script>
+function increment(id) {
+    document.getElementById('score-' + id).stepUp();
+}
+function decrement(id) {
+    document.getElementById('score-' + id).stepDown();
+}
+</script>
 {% endblock content %}
