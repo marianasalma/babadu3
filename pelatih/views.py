@@ -61,7 +61,8 @@ def pelatihan(request):
             atlet_id_to_string = str(atlet_id[0][0])
             print(atlet_id_to_string)
 
-            cursor.execute("INSERT INTO ATLET_PELATIH (ID_Pelatih, ID_Atlet) VALUES (%s,%s)", (pelatih_id, atlet_id[0][0]))
+            cursor.execute("""
+                        INSERT INTO ATLET_PELATIH (ID_Pelatih, ID_Atlet) VALUES (%s,%s)""", (pelatih_id, atlet_id[0][0]))
             
             # insert trigger iei
             
